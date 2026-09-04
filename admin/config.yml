@@ -4,6 +4,7 @@ backend:
   branch: master
   base_url: https://api.netlify.com
   auth_endpoint: auth
+  site_domain: playful-basbousa-ccd102.netlify.app
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
