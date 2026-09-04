@@ -6,6 +6,8 @@ backend:
   auth_endpoint: auth
   site_domain: playful-basbousa-ccd102.netlify.app
 
+local_backend: true
+
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
 
