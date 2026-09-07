@@ -99,7 +99,12 @@ future                   : true
 read_more                : "disabled" # if enabled, adds "Read more" links to excerpts
 talkmap_link             : false      #change to true to add link to talkmap on talks page
 comments:
-  provider               : # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
+  provider               : "custom" # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
+  utterances:
+    repo                 : "benyco-dev/benyco-dev.github.io" # requires the utterances GitHub App: https://github.com/apps/utterances
+    issue_term           : "pathname"
+    label                : "comment"
+    theme                : "github-light"
   disqus:
     shortname            :
   discourse:
@@ -299,7 +304,8 @@ sass:
 
 
 # Outputting
-permalink: /:categories/:title/
+# Categories are excluded so that adding one to a post does not change its URL.
+permalink: /:title/
 # paginate: 5 # amount of posts to show
 # paginate_path: /page:num/
 timezone: Etc/UTC # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones

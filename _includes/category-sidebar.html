@@ -1,0 +1,17 @@
+{% include base_path %}
+
+{% assign category_list = site.categories | sort %}
+{% if category_list.size > 0 %}
+  <nav class="nav__list category__sidebar">
+    <header><h4 class="nav__title" style="padding: 0;">Categories</h4></header>
+    <ul>
+      {% for category in category_list %}
+        <li>
+          <a href="{{ base_path }}/categories/#{{ category[0] | slugify }}">
+            {{ category[0] }} <span style="opacity: 0.6;">({{ category[1].size }})</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

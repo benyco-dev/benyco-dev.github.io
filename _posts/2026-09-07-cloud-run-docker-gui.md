@@ -1,6 +1,9 @@
 ---
 title: Cloud Run에 Docker 이미지 배포하기 (콘솔 GUI 편)
 date: 2026-09-07
+categories:
+  - Google Cloud
+  - Docker
 tags:
   - GCP
   - Docker
