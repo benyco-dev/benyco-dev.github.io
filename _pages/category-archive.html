@@ -8,10 +8,44 @@ author_profile: true
 {% include base_path %}
 {% include group-by-array collection=site.posts field="categories" %}
 
+<p id="taxonomy-show-all" hidden><a href="{{ base_path }}/categories/">← Show all categories</a></p>
+
 {% for category in group_names %}
   {% assign posts = group_items[forloop.index0] %}
-  <h2 id="{{ category | slugify }}" class="archive__subtitle">{{ category }}</h2>
-  {% for post in posts %}
-    {% include archive-single.html %}
-  {% endfor %}
+  <section class="taxonomy__section" id="{{ category | slugify }}">
+    <h2 class="archive__subtitle">{{ category }}</h2>
+    {% for post in posts %}
+      {% include archive-single.html %}
+    {% endfor %}
+  </section>
 {% endfor %}
+
+<style>
+  .taxonomy__section[hidden], #taxonomy-show-all[hidden] { display: none !important; }
+</style>
+
+<script>
+  // A category link (#docker) narrows the page to that one section; without a
+  // hash every category is listed.
+  (function () {
+    function applyFilter() {
+      var slug = decodeURIComponent(window.location.hash.replace('#', ''));
+      var sections = document.querySelectorAll('.taxonomy__section');
+      var showAll = document.getElementById('taxonomy-show-all');
+      var matched = false;
+
+      Array.prototype.forEach.call(sections, function (section) {
+        if (section.id === slug) { matched = true; }
+      });
+
+      Array.prototype.forEach.call(sections, function (section) {
+        section.hidden = matched && section.id !== slug;
+      });
+
+      if (showAll) { showAll.hidden = !matched; }
+    }
+
+    applyFilter();
+    window.addEventListener('hashchange', applyFilter);
+  })();
+</script>
