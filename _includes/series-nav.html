@@ -1,0 +1,59 @@
+{% include base_path %}
+
+{% assign series_posts = site.posts %}
+{% assign series_title = "All posts" %}
+
+{% comment %}
+  site.categories only indexes posts, so a collection document carrying the
+  same front matter key would otherwise look up an empty series.
+{% endcomment %}
+{% assign series_category = page.categories[0] %}
+{% if series_category %}
+  {% assign category_posts = site.categories[series_category] %}
+  {% if category_posts.size > 0 %}
+    {% assign series_posts = category_posts | sort: "date" %}
+    {% assign series_title = series_category %}
+  {% endif %}
+{% endif %}
+
+{% if series_posts.size > 0 %}
+  {% assign current_index = 0 %}
+  {% for series_post in series_posts %}
+    {% if series_post.url == page.url %}{% assign current_index = forloop.index %}{% endif %}
+  {% endfor %}
+
+  <details class="series-nav" open>
+    <summary class="series-nav__title">{{ series_title }}</summary>
+
+    <ol class="series-nav__list">
+      {% for series_post in series_posts %}
+        {% if series_post.url == page.url %}
+          <li class="series-nav__item series-nav__item--current">{{ series_post.title }}</li>
+        {% else %}
+          <li class="series-nav__item"><a href="{{ base_path }}{{ series_post.url }}">{{ series_post.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+    </ol>
+
+    {% if current_index > 0 %}
+      <div class="series-nav__footer">
+        <span class="series-nav__count">{{ current_index }}/{{ series_posts.size }}</span>
+        <span class="series-nav__arrows">
+          {% if current_index > 1 %}
+            {% assign prev_index = current_index | minus: 2 %}
+            {% assign prev_post = series_posts[prev_index] %}
+            <a href="{{ base_path }}{{ prev_post.url }}" title="{{ prev_post.title | escape }}" aria-label="Previous post">&lsaquo;</a>
+          {% else %}
+            <span class="series-nav__arrow--off" aria-hidden="true">&lsaquo;</span>
+          {% endif %}
+          {% if current_index < series_posts.size %}
+            {% assign next_post = series_posts[current_index] %}
+            <a href="{{ base_path }}{{ next_post.url }}" title="{{ next_post.title | escape }}" aria-label="Next post">&rsaquo;</a>
+          {% else %}
+            <span class="series-nav__arrow--off" aria-hidden="true">&rsaquo;</span>
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+  </details>
+{% endif %}

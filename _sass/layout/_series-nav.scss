@@ -1,0 +1,68 @@
+/* ==========================================================================
+   Series navigation
+   Lists the posts of the current category, with the current one highlighted.
+   ========================================================================== */
+
+.series-nav {
+  margin: 1.5em 0 2em;
+  padding: 1.25em 1.5em;
+  font-family: $sans-serif-narrow;
+  background-color: var(--global-code-background-color);
+  border: 1px solid var(--global-border-color);
+  border-radius: $border-radius;
+}
+
+.series-nav__title {
+  font-size: $type-size-4;
+  font-weight: bold;
+  cursor: pointer;
+
+  &::marker {
+    color: var(--global-text-color-light);
+  }
+}
+
+.series-nav__list {
+  margin: 1em 0 0;
+  padding-left: 1.5em;
+
+  li {
+    margin-bottom: 0.4em;
+    font-size: $type-size-6;
+    line-height: 1.5;
+  }
+}
+
+.series-nav__item--current {
+  color: var(--global-base-color);
+  font-weight: bold;
+}
+
+.series-nav__footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 1em;
+  margin-top: 1.25em;
+  padding-top: 0.75em;
+  border-top: 1px solid var(--global-border-color);
+  font-size: $type-size-6;
+  color: var(--global-text-color-light);
+}
+
+.series-nav__arrows {
+  a,
+  .series-nav__arrow--off {
+    display: inline-block;
+    width: 1.8em;
+    text-align: center;
+    font-size: $type-size-5;
+    line-height: 1.6;
+    border: 1px solid var(--global-border-color);
+    border-radius: $border-radius;
+  }
+
+  .series-nav__arrow--off {
+    color: var(--global-border-color);
+  }
+}
