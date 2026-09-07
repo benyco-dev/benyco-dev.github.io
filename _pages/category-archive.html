@@ -25,8 +25,9 @@ author_profile: true
 </style>
 
 <script>
-  // A category link (#docker) narrows the page to that one section; without a
-  // hash every category is listed.
+  /* A category link (#docker) narrows the page to that one section; without a
+     hash every category is listed. Block comments only: the production build
+     minifies this page onto a single line, so // would comment out the rest. */
   (function () {
     function applyFilter() {
       var slug = decodeURIComponent(window.location.hash.replace('#', ''));
