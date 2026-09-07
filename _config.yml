@@ -191,6 +191,7 @@ exclude:
   - LICENSE
   - local
   - log
+  - netlify.toml
   - node_modules
   - package.json*
   - Rakefile

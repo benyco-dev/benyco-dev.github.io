@@ -1,0 +1,14 @@
+# This repo is hosted on GitHub Pages, not Netlify.
+#
+# The Netlify site (playful-basbousa-ccd102) exists only to act as the
+# OAuth broker for the Decap CMS admin panel — see admin/config.yml,
+# which points at https://api.netlify.com for authentication.
+#
+# Netlify does not need to build or deploy anything here. The ignore
+# command below exits 0 on every push, which tells Netlify to cancel
+# the build before it installs dependencies or runs Jekyll.
+#
+# OAuth is unaffected: api.netlify.com only needs the site to exist,
+# not to have a recent deploy.
+[build]
+  ignore = "/bin/true"
