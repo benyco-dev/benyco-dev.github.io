@@ -1,6 +1,6 @@
 ---
 title: Google Cloud Compute Engine에 Docker로 Nginx 띄우기
-date: 2026-09-04
+date: 2026-09-05
 categories:
   - Google Cloud
   - Docker
