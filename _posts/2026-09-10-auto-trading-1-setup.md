@@ -2,8 +2,7 @@
 title: "Claude Code와 토스증권 API로 자동매매 시작하기 (환경 구성)"
 date: 2026-09-10
 categories:
-  - Trading
-  - Google Cloud
+  - Auto Trading
 tags:
   - 자동매매
   - Claude Code

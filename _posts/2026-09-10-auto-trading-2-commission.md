@@ -2,8 +2,7 @@
 title: "Claude Code와 토스증권 API로 자동매매 시작하기 (수수료의 함정)"
 date: 2026-09-10
 categories:
-  - Trading
-  - Python
+  - Auto Trading
 tags:
   - 자동매매
   - 백테스트
