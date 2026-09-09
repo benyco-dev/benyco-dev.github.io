@@ -19,3 +19,21 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Site content
+
+The MIT License above applies to the **Academic Pages theme code** it ships with
+(templates, stylesheets, JavaScript, and configuration).
+
+It does **not** apply to the site's written content. All blog posts under
+`_posts/`, page content under `_pages/`, and images under `images/` are
+
+    Copyright (c) 2026 Benyco (https://benyco-dev.github.io)
+
+All rights reserved. You may quote short excerpts with attribution and a link
+to the original post. Republishing a post in whole, or translating it, requires
+permission.
+
+Code samples shown inside posts are free to use without restriction.
