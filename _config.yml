@@ -7,12 +7,12 @@
 # server process.
 
 # Basic Site Settings
-locale                   : "en-US"
+locale                   : "ko_KR"
 site_theme               : "default" # The available themes options are "default", "air", "sunrise", "mint", "dirt" and "contrast"
 title                    : "Benyco's Blog"
 title_separator          : "-"
 name                     : &name "Benyco"
-description              : &description "Benyco's Blog"   # Update this with a general description of your site, this is the default if not overridden by a page
+description              : &description "클라우드, 도커, 자동매매를 직접 만들어보고 남기는 개발 기록. GCP · Docker · Python · Claude Code."
 url                      : https://benyco-dev.github.io # The base hostname & protocol for your site e.g. "https://[your GitHub username].github.io",
                                                            # or if you already have some other page hosted on Github then use "https://[your GitHub username].github.io/[Your Repo Name]"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
