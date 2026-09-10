@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     if: "contains(github.event.pull_request.body, 'by deleting this comment block') || github.event.pull_request.body == ''"
     steps:
-      - uses: actions-ecosystem/action-add-labels@v1
+      - uses: actions-ecosystem/action-add-labels@18f1af5e3544586314bbe15c0273249c770b2daf # v1.1.3
         with:
           labels: |
             invalidpr
-      - uses: superbrothers/close-pull-request@v3
+      - uses: superbrothers/close-pull-request@9c18513d320d7b2c7185fb93396d0c664d5d8448 # v3.1.2
         with:
           # Post a comment just before closing a pull request
           comment: |
@@ -27,7 +27,7 @@ jobs:
               [1]: https://github.com/academicpages/academicpages.github.io
               [2]: https://github.com/academicpages/academicpages.github.io/discussions
               [3]: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests
-      - uses: sudo-bot/action-pull-request-lock@v2
+      - uses: sudo-bot/action-pull-request-lock@e20c54d0f068b0b2cf3b345e0585c10ac5d5415a # v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           number: ${{ github.event.pull_request.number }}
