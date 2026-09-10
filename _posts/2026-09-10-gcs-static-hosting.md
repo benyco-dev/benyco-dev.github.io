@@ -38,9 +38,9 @@ GitHub Actions ──(Workload Identity Federation, 키 파일 없음)──> GC
 프로젝트를 새로 파고 결제를 연결한 다음 버킷을 만들었다. 서울 리전(`asia-northeast3`)으로 잡았다.
 
 ```bash
-$ gcloud storage buckets create gs://benycolottery \
-    --project=benycolottery --location=asia-northeast3 --uniform-bucket-level-access
-Creating gs://benycolottery/...
+$ gcloud storage buckets create gs://my-project \
+    --project=my-project --location=asia-northeast3 --uniform-bucket-level-access
+Creating gs://my-project/...
 ```
 
 `--uniform-bucket-level-access` 를 켜면 객체마다 ACL을 따로 두지 않고 **버킷 IAM 하나로만** 접근을 통제한다. 정적 사이트처럼 "전부 공개"인 경우엔 이게 훨씬 단순하고, 파일을 새로 올릴 때마다 권한이 제각각이 되는 사고를 막아준다.
@@ -50,8 +50,8 @@ Creating gs://benycolottery/...
 버킷을 만들었다고 바로 보이는 건 아니다. `allUsers` 에게 읽기 권한을 줘야 한다.
 
 ```bash
-$ gcloud storage buckets add-iam-policy-binding gs://benycolottery \
-    --member=allUsers --role=roles/storage.objectViewer --project=benycolottery
+$ gcloud storage buckets add-iam-policy-binding gs://my-project \
+    --member=allUsers --role=roles/storage.objectViewer --project=my-project
   - allUsers
   role: roles/storage.objectViewer
 ```
@@ -63,10 +63,10 @@ $ gcloud storage buckets add-iam-policy-binding gs://benycolottery \
 `gcloud storage rsync` 로 폴더를 통째로 올린다.
 
 ```bash
-$ gcloud storage rsync site gs://benycolottery --recursive \
+$ gcloud storage rsync site gs://my-project --recursive \
     --delete-unmatched-destination-objects \
     --cache-control="public, max-age=300" \
-    --project=benycolottery
+    --project=my-project
 ```
 
 두 옵션이 중요하다.
@@ -75,14 +75,14 @@ $ gcloud storage rsync site gs://benycolottery --recursive \
 
 ```bash
 $ curl -s -o /dev/null -w "%{http_code}\n" \
-    https://storage.googleapis.com/benycolottery/data/independence.json
+    https://storage.googleapis.com/my-project/data/independence.json
 404
 ```
 
 `--cache-control` 이 두 번째다. **이걸 안 주면 GCS가 기본값 `max-age=3600` 을 붙인다.** 파일을 새로 올려도 브라우저와 중간 캐시가 한 시간 동안 옛날 걸 보여준다. 배포했는데 왜 안 바뀌지 하고 한참 헤맬 수 있는 지점이다. 이 사이트는 주 1회 갱신이라 5분으로 뒀다.
 
 ```bash
-$ curl -sI https://storage.googleapis.com/benycolottery/index.html | grep -i cache
+$ curl -sI https://storage.googleapis.com/my-project/index.html | grep -i cache
 cache-control: public, max-age=300
 ```
 
@@ -90,7 +90,7 @@ Content-Type은 확장자로 자동 판별된다. ES 모듈로 쓴 `.js` 파일�
 
 ```bash
 $ curl -s -o /dev/null -w '%{http_code} %{content_type}\n' \
-    https://storage.googleapis.com/benycolottery/app.js
+    https://storage.googleapis.com/my-project/app.js
 200 text/javascript
 ```
 
@@ -104,23 +104,23 @@ $ curl -s -o /dev/null -w '%{http_code} %{content_type}\n' \
 
 ```bash
 $ gcloud iam service-accounts create <서비스계정> \
-    --project=benycolottery --display-name="GitHub Actions deploy"
-Service account email: <서비스계정>@benycolottery.iam.gserviceaccount.com
+    --project=my-project --display-name="GitHub Actions deploy"
+Service account email: <서비스계정>@my-project.iam.gserviceaccount.com
 
-$ gcloud storage buckets add-iam-policy-binding gs://benycolottery \
-    --member="serviceAccount:<서비스계정>@benycolottery.iam.gserviceaccount.com" \
-    --role=roles/storage.objectAdmin --project=benycolottery
+$ gcloud storage buckets add-iam-policy-binding gs://my-project \
+    --member="serviceAccount:<서비스계정>@my-project.iam.gserviceaccount.com" \
+    --role=roles/storage.objectAdmin --project=my-project
 ```
 
 그다음 워크로드 아이덴티티 풀과 프로바이더를 만든다.
 
 ```bash
 $ gcloud iam workload-identity-pools create github \
-    --location=global --project=benycolottery
+    --location=global --project=my-project
 Created workload identity pool [github].
 
 $ gcloud iam workload-identity-pools providers create-oidc github-actions \
-    --location=global --workload-identity-pool=github --project=benycolottery \
+    --location=global --workload-identity-pool=github --project=my-project \
     --issuer-uri="https://token.actions.githubusercontent.com" \
     --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
     --attribute-condition="assertion.repository=='benyco-dev/lottery'"
@@ -132,9 +132,9 @@ Created workload identity pool provider [github-actions].
 마지막으로 이 저장소에서만 서비스 계정을 위임받을 수 있도록 묶어준다.
 
 ```bash
-$ PN=$(gcloud projects describe benycolottery --format='value(projectNumber)')
+$ PN=$(gcloud projects describe my-project --format='value(projectNumber)')
 $ gcloud iam service-accounts add-iam-policy-binding \
-    <서비스계정>@benycolottery.iam.gserviceaccount.com --project=benycolottery \
+    <서비스계정>@my-project.iam.gserviceaccount.com --project=my-project \
     --role=roles/iam.workloadIdentityUser \
     --member="principalSet://iam.googleapis.com/projects/$PN/locations/global/workloadIdentityPools/github/attribute.repository/benyco-dev/lottery"
 ```
@@ -167,9 +167,9 @@ steps:
 `roles/storage.legacyBucketReader` 를 같이 줘야 통과한다.
 
 ```bash
-$ gcloud storage buckets add-iam-policy-binding gs://benycolottery \
-    --member="serviceAccount:<서비스계정>@benycolottery.iam.gserviceaccount.com" \
-    --role=roles/storage.legacyBucketReader --project=benycolottery
+$ gcloud storage buckets add-iam-policy-binding gs://my-project \
+    --member="serviceAccount:<서비스계정>@my-project.iam.gserviceaccount.com" \
+    --role=roles/storage.legacyBucketReader --project=my-project
 ```
 
 이름에 `legacy` 가 붙어 있어서 쓰면 안 되는 것처럼 보이는데, uniform bucket-level access 환경에서도 버킷 조회 권한을 주는 정식 역할이다.
@@ -177,7 +177,7 @@ $ gcloud storage buckets add-iam-policy-binding gs://benycolottery \
 최종 권한은 이렇게 정리됐다.
 
 ```bash
-$ gcloud storage buckets get-iam-policy gs://benycolottery --format=json
+$ gcloud storage buckets get-iam-policy gs://my-project --format=json
   roles/storage.objectViewer        -> allUsers
   roles/storage.objectAdmin         -> serviceAccount:<서비스계정>@...
   roles/storage.legacyBucketReader  -> serviceAccount:<서비스계정>@...
