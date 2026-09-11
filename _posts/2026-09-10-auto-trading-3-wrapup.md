@@ -1,5 +1,5 @@
 ---
-title: "Claude Code와 토스증권 API로 자동매매 시작하기 (마무리)"
+title: "Claude Code와 토스증권 API로 자동매매 시작하기 3편 (마무리)"
 date: 2026-09-10
 categories:
   - Auto Trading

@@ -1,5 +1,5 @@
 ---
-title: "Claude Code와 토스증권 API로 자동매매 시작하기 (수수료의 함정)"
+title: "Claude Code와 토스증권 API로 자동매매 시작하기 2편 (수수료의 함정)"
 date: 2026-09-10
 categories:
   - Auto Trading

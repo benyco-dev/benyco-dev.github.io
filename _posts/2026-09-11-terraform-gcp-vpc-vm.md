@@ -3,6 +3,7 @@ title: Terraform으로 GCP에 VPC + VM 만들고 지워보기
 date: 2026-09-11
 categories:
   - Google Cloud
+  - Terraform
 tags:
   - GCP
   - Terraform

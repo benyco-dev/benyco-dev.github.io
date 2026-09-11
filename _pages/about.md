@@ -30,4 +30,8 @@ redirect_from:
 - [Compute Engine에 Docker로 Nginx 띄우기](/gcp-docker-nginx/)
 - [Cloud Run에 Docker 이미지 배포하기](/cloud-run-docker-gui/)
 
+**[Terraform](/categories/#terraform)**
+
+- [Terraform으로 GCP에 VPC + VM 만들고 지워보기](/terraform-gcp-vpc-vm/)
+
 [전체 글 보기](/year-archive/) · [GitHub](https://github.com/benyco-dev)
