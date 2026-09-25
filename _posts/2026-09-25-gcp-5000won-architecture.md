@@ -228,8 +228,6 @@ resource "google_storage_bucket" "thumbs" {
 | Cloud Logging | 보관 30일 | 기본값 그대로, 개인정보처리방침 기간과 맞춤 |
 | 배포 | GitHub Actions + Workload Identity Federation | 서비스 계정 키 없이, Cloud Build 비용 없이 |
 
-그래도 실수로 요금이 튈 수는 있다. 그래서 **월 5만원을 넘으면 사이트를 자동으로 끄는 장치**도 달았다. 이건 따로 글로 쓴다.
-
 ## 정리
 
 - 트래픽이 적은 개인 서비스라면 **Cloud SQL, 로드밸런서, VPC 커넥터 없이도** GCP에서 충분히 운영할 수 있다. 셋만 빼도 월 약 5.5만원이 준다.
