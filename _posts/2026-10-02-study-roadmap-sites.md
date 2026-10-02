@@ -1,0 +1,121 @@
+---
+title: 클라우드 공부하려고 학습 사이트 26개를 만든 이야기 (IT 기초 · 쿠버네티스 · 구글 클라우드)
+date: 2026-10-02
+categories:
+  - Google Cloud
+tags:
+  - GCP
+  - Cloud Storage
+  - Kubernetes
+  - 정적 호스팅
+  - 학습 로드맵
+excerpt: IT 기초에서 쿠버네티스, 구글 클라우드까지 과제 779개짜리 학습 사이트 26개를 만들었다. 서버는 0대, 버킷 3개가 전부다. 페이지를 열면 오늘 할 일 하나가 바로 보이게 하는 게 목표였다.
+---
+
+GKE, BigQuery, Vertex AI를 제대로 이해하고 싶었다.
+
+공부 자료는 넘쳐났다. 문제는 **"그래서 오늘 뭘 하지?"** 였다. 공식 문서는 너무 넓고, 강의는 너무 길고, 블로그 글은 서로 순서가 달랐다.
+
+그래서 기준을 하나 정했다. **페이지를 열면 지금 할 일 하나가 바로 보일 것.**
+
+## 무엇을 만들었나
+
+| 묶음 | 과목 | 기간(하루 1시간) |
+|---|---|---|
+| IT 기초 | 서버, 네트워크, DB, Python, 웹과 API, Git, 보안, 아키텍처 | 약 32주 |
+| 쿠버네티스 | 전체 로드맵 + 01 컨테이너 ~ 10 전문가 | 약 32주 |
+| 구글 클라우드 | 초급, 중급, 상급 + BigQuery, Vertex AI, Gemini Enterprise, Antigravity | 약 48주 |
+
+- [IT 기초](https://storage.googleapis.com/study-it-basics-site/index.html)
+- [쿠버네티스](https://storage.googleapis.com/study-k8s-roadmap-site/index.html)
+- [구글 클라우드](https://storage.googleapis.com/study-gcp-roadmap-site/index.html)
+- 소스: [benyco-dev/study-roadmap-sites](https://github.com/benyco-dev/study-roadmap-sites)
+
+## 한 페이지에 들어 있는 것
+
+과목 페이지는 모두 같은 틀이다.
+
+1. **다음 할 일 카드** — 체크 안 한 첫 과제를 맨 위에 띄운다. 스크롤해서 찾을 필요가 없다.
+2. **진행 체크** — 과제마다 체크박스. 브라우저 `localStorage`에만 저장해서 로그인이 필요 없다.
+3. **주석 달린 명령어 + 예상 결과** — 명령 옆에 `# 이게 무슨 뜻인지`를 붙이고, 실행하면 화면에 뭐가 나와야 정상인지 같이 보여 준다. 결과가 다르면 거기서 막힌 거다.
+4. **"쉽게 말하면"** — 과제마다 비유 한 줄. 예: "정책 태그는 서류의 특정 칸에 붙인 대외비 스티커."
+5. **용어 사전, 참고 링크, 맥북 실습 메모**
+
+묶음마다 메인 페이지가 있고, 각 과목의 진행률을 읽어서 **"다음에 할 과목"** 을 골라 준다.
+
+## 데이터와 틀을 나누기
+
+26개 페이지를 손으로 만들면 디자인 하나 고칠 때 26번 고쳐야 한다. 그래서 둘로 나눴다.
+
+```
+과목 데이터 (JS 파일)        template.html
+단계, 과제, 명령어, 용어      페이지 모양
+          │                      │
+          └──────────┬───────────┘
+                     v
+                 build.js
+            틀에 데이터를 끼워 넣음
+                     │
+                     v
+              정적 HTML 26개
+                     │
+                     v
+            Cloud Storage 버킷
+```
+
+- **내용 수정** → 해당 과목 JS 파일 하나만
+- **디자인 수정** → 생성기 하나만 고치고 다시 생성
+
+데이터 파일은 `validate.js`로 먼저 검사한다. 과제 형식, 중복 ID 같은 기본 검사 말고도 실제로 겪은 실수를 규칙으로 넣었다.
+
+- 줄 이음 `\` 뒤에 주석을 붙이면 셸 명령이 깨짐 → 잡아냄
+- Dockerfile 줄 끝 주석은 오류 → 잡아냄
+- heredoc 종료 `EOF` 줄에 주석 → 잡아냄
+
+의존성은 0개다. Node.js만 있으면 된다.
+
+## 호스팅: 버킷 3개가 전부
+
+```
+학습자 브라우저 ──HTTPS──> storage.googleapis.com
+      │                          │
+      v                          v
+ localStorage               버킷 3개
+ (진행 체크)          (서울 리전, allUsers 읽기 전용)
+```
+
+- **Cloud Storage** — HTML 파일만 올리면 끝. 서버 관리가 없다.
+- **IAM** — `allUsers`에 `objectViewer`만. 누구나 읽지만 아무도 못 고친다.
+
+처음엔 설명을 생성해 주는 Cloud Run 서버도 붙였다가 지웠다. 정적 파일로 충분했고, 서버가 없으니 비용도, 보안 걱정도 같이 사라졌다. 버킷 호스팅 자체는 [Cloud Storage 정적 호스팅 글](/gcs-static-hosting/)에서 해 본 패턴 그대로다.
+
+업로드할 때 한 가지 주의할 점:
+
+```bash
+gcloud storage cp index.html gs://<bucket>/server/index.html --content-type="text/html; charset=utf-8" --cache-control="no-cache"
+```
+
+`charset=utf-8`을 빼면 한글이 깨지고, `no-cache`를 빼면 고친 내용이 한동안 안 보인다.
+
+## 윈도우와 맥북 문제
+
+실습 환경이 생각보다 큰 문제였다.
+
+- **Docker Desktop은 큰 회사에서 유료** → WSL(윈도우) 또는 Ubuntu VM(맥) 안에 무료 Docker Engine
+- **맥은 Multipass로 Ubuntu VM** → 사이트의 리눅스 명령을 윈도우와 똑같이 씀
+- **Apple Silicon** → 다운로드 주소의 `amd64`를 `arm64`로
+
+과목 데이터를 하나하나 고치지 않고, 생성기가 과제 내용을 보고 맥 메모를 자동으로 붙이게 했다. `PowerShell`이 나오면 "VM에서 하세요", `localhost:포트`가 나오면 "VM IP로 여세요", `amd64`가 나오면 "arm64로 바꾸세요".
+
+## 배운 것
+
+1. **"다음 할 일" 하나가 목차 100개보다 낫다.** 열자마자 할 일이 보이면 시작이 쉽다.
+2. **예상 결과를 같이 적으면 혼자 디버깅이 된다.** "내 화면이 이것과 다르다"가 곧 질문이 된다.
+3. **정적 사이트면 충분한 경우가 많다.** 서버를 붙였다가 지운 게 이번 프로젝트에서 제일 잘한 결정이다.
+4. **공개할 거라면 처음부터 안 넣는다.** 개인 계정, 프로젝트 ID 같은 정보는 처음부터 넣지 않았다. 예시 이메일은 `example.com`, 예시 IP는 문서용 대역만 썼다.
+
+## 아직 남은 것
+
+명령어 대부분은 아직 직접 다 실행해 보지 못했다. 따라 하다 에러가 나면 [GitHub 이슈](https://github.com/benyco-dev/study-roadmap-sites/issues)로 알려 주면 고쳐서 다시 올리겠다.
+
+지금은 IT 기초의 첫 과목, 서버부터 하고 있다.
