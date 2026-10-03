@@ -29,7 +29,6 @@ GKE, BigQuery, Vertex AI를 제대로 이해하고 싶었다.
 - [IT 기초](https://storage.googleapis.com/study-it-basics-site/index.html)
 - [쿠버네티스](https://storage.googleapis.com/study-k8s-roadmap-site/index.html)
 - [구글 클라우드](https://storage.googleapis.com/study-gcp-roadmap-site/index.html)
-- 소스: [benyco-dev/study-roadmap-sites](https://github.com/benyco-dev/study-roadmap-sites)
 
 ## 한 페이지에 들어 있는 것
 
@@ -116,6 +115,6 @@ gcloud storage cp index.html gs://<bucket>/server/index.html --content-type="tex
 
 ## 아직 남은 것
 
-명령어 대부분은 아직 직접 다 실행해 보지 못했다. 따라 하다 에러가 나면 [GitHub 이슈](https://github.com/benyco-dev/study-roadmap-sites/issues)로 알려 주면 고쳐서 다시 올리겠다.
+명령어 대부분은 아직 직접 다 실행해 보지 못했다. 따라 하다 에러가 나면 댓글로 알려 주면 고쳐서 다시 올리겠다.
 
 지금은 IT 기초의 첫 과목, 서버부터 하고 있다.
